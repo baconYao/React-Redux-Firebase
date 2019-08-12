@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+import { connect } from "react-redux";
+import { createProject } from '../../store/actions/projectActions'
 
 class CreateProject extends Component {
   state = {
@@ -14,7 +16,10 @@ class CreateProject extends Component {
 
   handleSubmmit = (e) => {
     e.preventDefault();
-    console.log(this.state)
+    // console.log(this.state)
+    
+    //  存取mapDispatchToProps定義的createProject，我們將this.state當成參數(因此就是第51行的參數，名為project)
+    this.props.createProject(this.state);
   }
 
   render() {
@@ -39,4 +44,13 @@ class CreateProject extends Component {
   }
 }
 
-export default CreateProject;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // dispatch 內的 createProject，即是我們從import進來的function
+    // key createProject，我們將可以透過props access 到它
+    createProject: (project) => dispatch(createProject(project)) 
+  }
+}
+
+// 第一個參數是給 mapStateToProps使用，但在這裡沒使用，因此傳null
+export default connect(null, mapDispatchToProps)(CreateProject);

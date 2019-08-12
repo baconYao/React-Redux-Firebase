@@ -7,6 +7,13 @@ const initState = {
 };
 
 const projectReducer = (state=initState, action) => {
+  // acation的type是我們在action js檔案裡面定義的
+  switch(action.type) {
+    case 'CREATE_PROJECT':
+      // 當action對應到我們的定義定義時(在actions/projectActions.js內)
+      console.log('create_project', action.project);
+  }
+  
   return state;
 }
 

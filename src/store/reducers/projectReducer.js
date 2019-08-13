@@ -12,9 +12,13 @@ const projectReducer = (state=initState, action) => {
     case 'CREATE_PROJECT':
       // 當action對應到我們的定義定義時(在actions/projectActions.js內)
       console.log('create_project', action.project);
+      return state;
+    case 'CREATE_PROJECT_ERROR':
+      console.log("create project error", action.err);
+      return state;
+    default:
+      return state;
   }
-  
-  return state;
 }
 
 export default projectReducer;

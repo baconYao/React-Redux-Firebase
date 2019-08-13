@@ -47,7 +47,7 @@ class CreateProject extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     // dispatch 內的 createProject，即是我們從import進來的function
-    // key createProject，我們將可以透過props access 到它
+    // key createProject，我們將可以透過props access 到它。在此的參數project，即是this.state，並且將它傳入dispatch(createProject(project)內(將由projectActions.js接收)
     createProject: (project) => dispatch(createProject(project)) 
   }
 }

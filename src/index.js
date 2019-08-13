@@ -3,12 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import rootReducer from './store/reducers/rootReducer';
 import thunk from 'redux-thunk';
+import { getFirestore, reduxFirestore } from 'redux-firestore';
+import { getFirebase, reactReduxFirebase } from 'react-redux-firebase';
+import fbConfig from './config/fbConfig';
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+// withExtraArgument讓我們可以傳入需要使用到的東西，然後再action時使用它們(可以參考store/actions/projectActions.js)
+const store = createStore(rootReducer, 
+  compose(
+    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
+    reduxFirestore(fbConfig),
+    reactReduxFirebase(fbConfig)
+  )
+);
 
 ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
 

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Notifications from "./Notifications";
 import ProjectList from "../projects/ProjectList";
-import { tsPropertySignature } from "@babel/types";
 import { connect } from "react-redux";
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
 
 class Dashboard extends Component {
   render() {
@@ -31,9 +32,18 @@ const mapStateToProps = (state) => {
     // state.project的project是在rootReducer.js定義的
     // state.project.projects的projects是在projectReducer.js的initState給予得值
     // 我們在這裡定義的projects key，將可以透過 this.tsPropertySignature.projects取得
-    projects: state.project.projects
+    
+    // projects: state.project.projects
+    projects: state.firestore.ordered.projects     // 原本是利用上面的state.project.projects 取得 dummy data，現在改成從firestore存取real data
   }
 }
 
+// compose將component變成higher order component，在此是將connect和firestoreConnect變成Dashboard的higher order component
 // connect是react和redux的黏合劑，需要帶入mapStateToProps，使得Dashboard component知道redux給予它什麼props(在這裡是projects，我們定義的key)
-export default connect(mapStateToProps)(Dashboard);
+// firestoreConnect用來和fiestore做data sync，類似一個listener，隨時監聽firestire的變動，它會導致firestoreReducer去和firestore database去做資料的sync，由於資料會存在store內(因我們在rootReducer有定義firestoreReducer)，因此可以透過props去存去資料。利用一個list來定義要存取哪些collection(在此為 projects collection)。 
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect([
+    { collection: 'projects' }
+  ])
+)(Dashboard);

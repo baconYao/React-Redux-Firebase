@@ -26,6 +26,7 @@ class Dashboard extends Component {
 
 // 將redux內的state轉換成props，以供此 class component 使用
 const mapStateToProps = (state) => {
+  console.log(state)
   return {
     // state.project的project是在rootReducer.js定義的
     // state.project.projects的projects是在projectReducer.js的initState給予得值

@@ -4,11 +4,14 @@ import ProjectList from "../projects/ProjectList";
 import { connect } from "react-redux";
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
+import { Redirect } from 'react-router-dom';
 
 class Dashboard extends Component {
   render() {
     // console.log(this.props)
-    const { projects } = this.props;
+    const { projects, auth } = this.props;
+    if(!auth.uid) return <Redirect to='/signin' />
+
     return (
       <div className="dashboard container">
         <div className="row">
@@ -34,7 +37,8 @@ const mapStateToProps = (state) => {
     // 我們在這裡定義的projects key，將可以透過 this.tsPropertySignature.projects取得
     
     // projects: state.project.projects
-    projects: state.firestore.ordered.projects     // 原本是利用上面的state.project.projects 取得 dummy data，現在改成從firestore存取real data
+    projects: state.firestore.ordered.projects,     // 原本是利用上面的state.project.projects 取得 dummy data，現在改成從firestore存取real data
+    auth: state.firebase.auth
   }
 }
 

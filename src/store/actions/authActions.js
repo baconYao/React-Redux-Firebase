@@ -22,3 +22,27 @@ export const signOut = () => {
     });
   }
 }
+
+export const signUp = (newUser) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+    
+    // 新增一個使用者
+    firebase.auth().createUserWithEmailAndPassword(
+      newUser.email,
+      newUser.password
+    ).then((response) => {
+      // 利用firebase建立的user的uid，去firestore的users collection內新增一個documents，其id就是uid
+      return firestore.collection('users').doc(response.user.uid).set({
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        initials: newUser.firstName[0] + newUser.lastName[0]
+      })
+    }).then(() => {
+      dispatch({ type: "SIGNUP_SUCCESS"});
+    }).catch((error) => {
+      dispatch({ type: "SIGNUP_ERROR", error});
+    })
+  }
+}

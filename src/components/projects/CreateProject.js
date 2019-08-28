@@ -19,8 +19,10 @@ class CreateProject extends Component {
     e.preventDefault();
     // console.log(this.state)
     
-    //  存取mapDispatchToProps定義的createProject，我們將this.state當成參數(因此就是第51行的參數，名為project)
+    // 存取mapDispatchToProps定義的createProject，我們將this.state當成參數(因此就是第51行的參數，名為project)
     this.props.createProject(this.state);
+    // redirct to home page
+    this.props.history.push('/');
   }
 
   render() {

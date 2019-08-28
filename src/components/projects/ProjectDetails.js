@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { Redirect } from 'react-router-dom';
+import moment from 'moment';
 
 const  ProjectDetails = (props) => {
   // 從url route 取得 文章的 id
@@ -23,7 +24,7 @@ const  ProjectDetails = (props) => {
           </div>
           <div className="card-action gret lighten-4 grey-text">
             <div>Posted by { my_project.authorFirstName } { my_project.authorLastName }</div>
-            <div>2 nd september, 2am</div>
+            <div>moment(project.createdAt.toDate()).calendar()</div>
           </div>
         </div>
       </div>

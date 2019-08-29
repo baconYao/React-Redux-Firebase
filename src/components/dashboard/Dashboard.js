@@ -9,7 +9,7 @@ import { Redirect } from 'react-router-dom';
 class Dashboard extends Component {
   render() {
     // console.log(this.props)
-    const { projects, auth } = this.props;
+    const { projects, auth, notifications } = this.props;
     if(!auth.uid) return <Redirect to='/signin' />
 
     return (
@@ -20,7 +20,7 @@ class Dashboard extends Component {
             <ProjectList projects={projects}/>      
           </div>
           <div className="col s12 m5 offset-m1">
-            <Notifications />
+            <Notifications notifications={notifications}/>
           </div>
         </div>
       </div>
@@ -38,16 +38,18 @@ const mapStateToProps = (state) => {
     
     // projects: state.project.projects
     projects: state.firestore.ordered.projects,     // 原本是利用上面的state.project.projects 取得 dummy data，現在改成從firestore存取real data
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    notifications: state.firestore.ordered.notifications
   }
 }
 
 // compose將component變成higher order component，在此是將connect和firestoreConnect變成Dashboard的higher order component
 // connect是react和redux的黏合劑，需要帶入mapStateToProps，使得Dashboard component知道redux給予它什麼props(在這裡是projects，我們定義的key)
-// firestoreConnect用來和fiestore做data sync，類似一個listener，隨時監聽firestire的變動，它會導致firestoreReducer去和firestore database去做資料的sync，由於資料會存在store內(因我們在rootReducer有定義firestoreReducer)，因此可以透過props去存去資料。利用一個list來定義要存取哪些collection(在此為 projects collection)。 
+// firestoreConnect用來和fiestore做data sync，類似一個listener，隨時監聽firestire的變動，它會導致firestoreReducer去和firestore database去做資料的sync，由於資料會存在store內(因我們在rootReducer有定義firestoreReducer)，因此可以透過props去存去資料(流程是，先在這裡將data取出，存進redux store，再透過mapStateToProps轉換成props以供存取)。利用一個list來定義要存取哪些collection(在此為 projects collection & notifications collection)。 
 export default compose(
   connect(mapStateToProps),
   firestoreConnect([
-    { collection: 'projects' }
+    { collection: 'projects' },
+    { collection: 'notifications', limit: 3 },
   ])
 )(Dashboard);
